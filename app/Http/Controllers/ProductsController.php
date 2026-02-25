@@ -10,11 +10,19 @@ class ProductsController extends BaseApiController
 {
     public function store(Request $request, ProductsService $productsService)
     {
+        $user = auth()->user();
+
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
 
         $validated = $request->validate([
             'product_name' => 'required',
             'product_price' => 'required',
             'product_stock' => 'required',
+            'product_description' => 'required'
         ]);
 
         $productsService->create($validated);
@@ -46,7 +54,8 @@ class ProductsController extends BaseApiController
         return $this->success('product updated', $validated);
     }
 
-    public function destroy(ProductsService $productsService, Product $product){
+    public function destroy(ProductsService $productsService, Product $product)
+    {
         $productsService->delete($product);
 
         return $this->success('product deleted', $product);
