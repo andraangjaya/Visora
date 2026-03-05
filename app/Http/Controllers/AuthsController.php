@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\Authsservice;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 
 class AuthsController extends BaseApiController
 {
-
-    public function register(Request $request, Authsservice $authsservice)
+    public function register(Request $request, AuthService $authService)
     {
         $validated = $request->validate([
             'name' => 'required',
@@ -17,14 +16,14 @@ class AuthsController extends BaseApiController
             'password' => 'required',
         ]);
 
-        $authsservice->register($validated);
+        $authService->register($validated);
 
         return $this->success('user created', $validated, 201);
     }
 
-    public function promote(User $user, Authsservice $authsservice)
+    public function promote(User $user, AuthService $authService)
     {
-        return $this->success('user promoted', $authsservice->promote($user));
+        return $this->success('user promoted', $authService->promote($user));
     }
 
     public function login(Request $request)
@@ -38,10 +37,11 @@ class AuthsController extends BaseApiController
         }
 
         $user = auth()->user();
+        $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'user' => $user
+            'user' => $user,
+            'token' => $token
         ]);
     }
-
 }
