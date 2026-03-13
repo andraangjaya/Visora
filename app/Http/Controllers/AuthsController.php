@@ -28,7 +28,10 @@ class AuthsController extends BaseApiController
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
         if (!auth()->attempt($credentials)) {
             return response()->json([

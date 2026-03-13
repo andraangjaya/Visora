@@ -13,7 +13,10 @@ class Product extends Model
         'product_name',
         'product_price',
         'product_stock',
-        'product_description'
+        'product_description',
+        'product_image',
+        'product_link',
+        'product_discount'
     ];
 
 }

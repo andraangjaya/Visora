@@ -9,8 +9,9 @@ Route::apiResource('products', ProductsController::class)->only(['index', 'show'
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::apiResource('products', ProductsController::class)->only(['store', 'update', 'destroy']);
+    Route::put('/promote/{user}', [AuthsController::class, 'promote']);
 });
 
 Route::post('/login', [AuthsController::class, 'login']);
 Route::post('/register', [AuthsController::class, 'register']);
-Route::put('/promote/{user}', [AuthsController::class, 'promote']);
+

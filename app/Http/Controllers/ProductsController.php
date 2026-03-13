@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Services\ProductsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends BaseApiController
 {
@@ -22,8 +23,20 @@ class ProductsController extends BaseApiController
             'product_name' => 'required',
             'product_price' => 'required',
             'product_stock' => 'required',
-            'product_description' => 'required'
+            'product_description' => 'required',
+            'product_image' => 'required|image|max:2048',
+            'product_link' => 'required|url',
+            'product_discount' => 'required'
         ]);
+
+        $file = $request->file('product_image');
+
+        Storage::disk('public')->put(
+            'products/'.$file->hashName(),
+            fopen($file->getPathname(), 'r')
+        );
+
+        $validated['product_image'] = 'products/'.$file->hashName();
 
         $productsService->create($validated);
 
