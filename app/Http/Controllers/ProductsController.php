@@ -32,20 +32,20 @@ class ProductsController extends BaseApiController
         $file = $request->file('product_image');
 
         Storage::disk('public')->put(
-            'products/'.$file->hashName(),
+            'products/' . $file->hashName(),
             fopen($file->getPathname(), 'r')
         );
 
-        $validated['product_image'] = 'products/'.$file->hashName();
+        $validated['product_image'] = 'products/' . $file->hashName();
 
         $productsService->create($validated);
 
         return $this->success('product created', $validated, 201);
     }
 
-    public function index()
+    public function index(Request $request, ProductsService $productsService)
     {
-        return Product::all();
+        return $productsService->getProducts($request);
     }
 
     public function show(Product $product)
@@ -72,7 +72,6 @@ class ProductsController extends BaseApiController
         $productsService->delete($product);
 
         return $this->success('product deleted', $product);
-
     }
 
 }
