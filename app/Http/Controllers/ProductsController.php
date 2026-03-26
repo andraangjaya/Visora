@@ -26,7 +26,7 @@ class ProductsController extends BaseApiController
             'product_description' => 'required',
             'product_image' => 'required|image|max:2048',
             'product_link' => 'required|url',
-            'product_discount' => 'required'
+            'product_discount' => 'required|numeric|min:0|max:100'
         ]);
 
         $file = $request->file('product_image');
@@ -38,9 +38,9 @@ class ProductsController extends BaseApiController
 
         $validated['product_image'] = 'products/' . $file->hashName();
 
-        $productsService->create($validated);
+        $product = $productsService->create($validated);
 
-        return $this->success('product created', $validated, 201);
+        return $this->success('product created', $product, 201);
     }
 
     public function index(Request $request, ProductsService $productsService)
