@@ -11,14 +11,6 @@ class ProductsController extends BaseApiController
 {
     public function store(Request $request, ProductsService $productsService)
     {
-        $user = auth()->user();
-
-        if ($user->role !== 'admin') {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $validated = $request->validate([
             'product_name' => 'required',
             'product_price' => 'required',

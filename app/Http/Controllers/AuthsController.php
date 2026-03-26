@@ -16,9 +16,14 @@ class AuthsController extends BaseApiController
             'password' => 'required',
         ]);
 
-        $authService->register($validated);
+        $user = $authService->register($validated);
+        $token = $user->createToken('api-token')->plainTextToken;
 
-        return $this->success('user created', $validated, 201);
+        return response()->json([
+            'message' => 'User registered successfully',
+            'token' => $token,
+            'user' => $user,
+        ], 201);
     }
 
     public function promote(User $user, AuthService $authService)
