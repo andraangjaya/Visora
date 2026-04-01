@@ -16,7 +16,7 @@ class ProductsController extends BaseApiController
             'product_price' => 'required',
             'product_stock' => 'required',
             'product_description' => 'required',
-            'product_image' => 'required|image|max:2048',
+            'product_image' => 'required|image|max:3000',
             'product_link' => 'required|url',
             'product_discount' => 'required|numeric|min:0|max:100'
         ]);
@@ -31,6 +31,8 @@ class ProductsController extends BaseApiController
         $validated['product_image'] = 'products/' . $file->hashName();
 
         $product = $productsService->create($validated);
+
+        $product->product_image_url = asset('storage/' . $product->product_image);
 
         return $this->success('product created', $product, 201);
     }
