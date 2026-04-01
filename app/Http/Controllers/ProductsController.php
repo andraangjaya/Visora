@@ -32,7 +32,7 @@ class ProductsController extends BaseApiController
 
         $product = $productsService->create($validated);
 
-        $product->product_image_url = asset('storage/' . $product->product_image);
+        $product->product_image_url = url('storage/' . $product->product_image);
 
         return $this->success('product created', $product, 201);
     }
