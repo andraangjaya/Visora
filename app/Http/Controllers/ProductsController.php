@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductsResource;
 use App\Models\Product;
 use App\Services\ProductsService;
 use Illuminate\Http\Request;
@@ -32,19 +33,17 @@ class ProductsController extends BaseApiController
 
         $product = $productsService->create($validated);
 
-        $product->product_image_url = url('storage/' . $product->product_image);
-
-        return $this->success('product created', $product, 201);
+        return $this->success('product created', new ProductsResource($product), 201);
     }
 
     public function index(Request $request, ProductsService $productsService)
     {
-        return $productsService->getProducts($request);
+        return ProductsResource::collection($productsService->getProducts($request));
     }
 
     public function show(Product $product)
     {
-        return $product;
+        return new ProductsResource($product);
     }
 
     public function update(Request $request, ProductsService $productsService, Product $product)
