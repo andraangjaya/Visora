@@ -11,7 +11,8 @@ class AuthsController extends BaseApiController
     public function register(Request $request, AuthService $authService)
     {
         $validated = $request->validate([
-            'name' => 'required',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
@@ -45,6 +46,7 @@ class AuthsController extends BaseApiController
         }
 
         $user = auth()->user();
+        $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
