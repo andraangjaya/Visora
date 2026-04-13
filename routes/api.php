@@ -13,5 +13,6 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 });
 
 Route::post('/login', [AuthsController::class, 'login']);
+Route::middleware(['auth:sanctum'])->post('/logout', [AuthsController::class, 'logout']);
 Route::post('/register', [AuthsController::class, 'register']);
 

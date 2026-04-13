@@ -6,11 +6,16 @@ use Illuminate\Routing\Controller;
 
 abstract class BaseApiController extends Controller
 {
-    public function success($message, $data, $status = 200){
-        return response()->json([
+    public function success($message, $data = null, $status = 200){
+        $response = [
             'message' => $message,
-            'data' => $data
-        ], $status);
+        ];
+
+        if(!is_null($data)){
+            $response['data'] = $data;
+        }
+
+        return response()->json($response, $status);
     }
 
     public function error($message, $data, $status = 400){
