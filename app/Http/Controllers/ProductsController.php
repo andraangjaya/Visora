@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Services\ProductsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Mews\Purifier\Facades\Purifier;
 
 class ProductsController extends BaseApiController
 {
@@ -17,6 +18,7 @@ class ProductsController extends BaseApiController
             'product_price' => 'required',
             'product_stock' => 'required',
             'product_description' => 'required',
+            'product_feature' => 'required',
             'product_image' => 'required|image|max:3000',
             'product_link' => 'required|url',
             'product_discount' => 'required|numeric|min:0|max:100'
@@ -30,6 +32,8 @@ class ProductsController extends BaseApiController
         );
 
         $validated['product_image'] = 'products/' . $file->hashName();
+
+        $validated['product_description'] = Purifier::clean($request->product_description);
 
         $product = $productsService->create($validated);
 

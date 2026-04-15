@@ -14,9 +14,14 @@ class Product extends Model
         'product_price',
         'product_stock',
         'product_description',
+        'product_feature',
         'product_image',
         'product_link',
         'product_discount'
+    ];
+
+    protected $casts = [
+        'product_feature' => 'array',
     ];
 
     protected $appends = ['final_price'];
