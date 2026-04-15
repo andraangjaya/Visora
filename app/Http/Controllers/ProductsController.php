@@ -18,7 +18,8 @@ class ProductsController extends BaseApiController
             'product_price' => 'required',
             'product_stock' => 'required',
             'product_description' => 'required',
-            'product_feature' => 'required',
+            'product_feature' => 'required|array',
+            'product_feature.*' => 'string',
             'product_image' => 'required|image|max:3000',
             'product_link' => 'required|url',
             'product_discount' => 'required|numeric|min:0|max:100'
