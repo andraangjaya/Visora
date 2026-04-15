@@ -40,6 +40,13 @@ class ProductsService
         return $product;
     }
 
+    public function updateStock(int $stock, Product $product): Product{
+        $product->update([
+            'product_stock' => $stock
+        ]);
+        return $product;
+    }
+
     public function delete(Product $product): Product
     {
         $product->delete();
