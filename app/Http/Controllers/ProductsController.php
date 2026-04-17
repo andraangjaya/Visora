@@ -27,12 +27,9 @@ class ProductsController extends BaseApiController
 
         $file = $request->file('product_image');
 
-        Storage::disk('public')->put(
-            'products/' . $file->hashName(),
-            fopen($file->getPathname(), 'r')
-        );
+        $filePath = $file->store('products', 'public');
 
-        $validated['product_image'] = 'products/' . $file->hashName();
+        $validated['product_image'] = $filePath;
 
         $validated['product_description'] = Purifier::clean($request->product_description);
 
