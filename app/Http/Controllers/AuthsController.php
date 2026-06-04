@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class AuthsController extends BaseApiController
 {
@@ -47,7 +48,7 @@ class AuthsController extends BaseApiController
 
         $user = auth()->user();
         $user->tokens()->delete();
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -55,9 +56,47 @@ class AuthsController extends BaseApiController
         ]);
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
         return $this->success('User logged out');
     }
 
+    public function forgotPassword(Request $request, AuthService $authService)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $status = $authService->forgotPassword($request->email);
+
+        $message = match ($status) {
+            Password::RESET_LINK_SENT => 'Reset link sent successfully',
+            Password::RESET_THROTTLED => 'Too many reset requests, please try again in 5 minutes.',
+            Password::INVALID_USER => 'Invalid email address'
+        };
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return $this->success($message);
+        } else {
+            return $this->error($message);
+        }
+    }
+
+    public function resetPassword(Request $request, AuthService $authService)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $status = $authService->resetPassword($validated);
+
+        if ($status === Password::PASSWORD_RESET) {
+            return $this->success('Password reset successful');
+        }
+
+        return $this->error('Password reset failed');
+    }
 }

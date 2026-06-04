@@ -18,10 +18,15 @@ abstract class BaseApiController extends Controller
         return response()->json($response, $status);
     }
 
-    public function error($message, $data, $status = 400){
-        return response()->json([
+    public function error($message, $data = null, $status = 400){
+        $response = [
             'message' => $message,
-            'data' => $data
-        ], $status);
+        ];
+
+        if(!is_null($data)){
+            $response['data'] = $data;
+        }
+
+        return response()->json($response, $status);
     }
 }

@@ -29,5 +29,4 @@ class Product extends Model
     public function getFinalPriceAttribute(){
         return $this->product_price - ($this->product_discount / 100 * $this->product_price);
     }
-
 }
