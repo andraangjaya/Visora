@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ResetPassword::createUrlUsing(function ($notifiable, string $token) {
-            return "http://localhost:5173/reset-password?token={$token}&email={$notifiable->email}";
+            return "https://visora-solutionbiz.vercel.app/reset-password?token={$token}&email={$notifiable->email}";
         });
     }
 }
